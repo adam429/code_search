@@ -1,0 +1,26 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "Deployer.sol": {
+      "content": "// SPDX-License-Identifier: LGPL-3.0-only\npragma solidity >=0.7.0 <0.9.0;\n\ninterface IOwnable {\n    function transferOwnership(address) external;\n}\n\ncontract Deployer {\n    event ContractCreation(address newContract);\n\n    function performCreate2(\n        uint256 value,\n        bytes memory deploymentData,\n        bytes32 salt,\n        address owner\n    ) public returns (address newContract) {\n        // solhint-disable-next-line no-inline-assembly\n        assembly {\n            newContract := create2(value, add(0x20, deploymentData), mload(deploymentData), salt)\n        }\n        require(newContract != address(0), \"Could not deploy contract\");\n\n        if (owner != address(0)) IOwnable(newContract).transferOwnership(owner);\n\n        emit ContractCreation(newContract);\n    }\n\n    function performCreate(uint256 value, bytes memory deploymentData, address owner) public returns (address newContract) {\n        // solhint-disable-next-line no-inline-assembly\n        assembly {\n            newContract := create(value, add(deploymentData, 0x20), mload(deploymentData))\n        }\n        require(newContract != address(0), \"Could not deploy contract\");\n        emit ContractCreation(newContract);\n\n        if (owner != address(0)) IOwnable(newContract).transferOwnership(owner);\n    }\n}"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "devdoc",
+          "userdoc",
+          "metadata",
+          "abi"
+        ]
+      }
+    }
+  }
+}

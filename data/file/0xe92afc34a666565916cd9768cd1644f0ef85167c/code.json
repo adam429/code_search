@@ -1,0 +1,27 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/BatchCheckIsContract.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.9;\n\ncontract BatchCheckIsContract {\n    function isContract(address[] calldata addresses) public view returns (bool[] memory) {\n        bool[] memory result = new bool[](addresses.length);\n\n        for (uint i = 0; i < addresses.length; i++) {\n            result[i] = addresses[i].code.length > 0;\n        }\n\n        return result;\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 10000
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "devdoc",
+          "userdoc",
+          "metadata",
+          "abi"
+        ]
+      }
+    },
+    "libraries": {}
+  }
+}

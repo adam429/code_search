@@ -1,0 +1,34 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "src/contracts/FraxlendWhitelist.sol": {
+      "content": "// SPDX-License-Identifier: ISC\npragma solidity ^0.8.15;\n\n// ====================================================================\n// |     ______                   _______                             |\n// |    / _____________ __  __   / ____(_____  ____ _____  ________   |\n// |   / /_  / ___/ __ `| |/_/  / /_  / / __ \\/ __ `/ __ \\/ ___/ _ \\  |\n// |  / __/ / /  / /_/ _>  <   / __/ / / / / / /_/ / / / / /__/  __/  |\n// | /_/   /_/   \\__,_/_/|_|  /_/   /_/_/ /_/\\__,_/_/ /_/\\___/\\___/   |\n// |                                                                  |\n// ====================================================================\n// ======================= FraxlendWhitelist ==========================\n// ====================================================================\n// Frax Finance: https://github.com/FraxFinance\n\n// Primary Author\n// Drake Evans: https://github.com/DrakeEvans\n\n// Reviewers\n// Dennis Ettes: https://github.com/denett\n// Sam Kazemian: https://github.com/samkazemian\n// Travis Moore: https://github.com/FortisFortuna\n// Jack Corddry: https://github.com/corddry\n// Rich Gee: https://github.com/zer0blockchain\n\n// ====================================================================\n\nimport \"./interfaces/IFraxlendWhitelist.sol\";\n\n// debugging only\n// import \"lib/ds-test/src/test.sol\";\n\ncontract FraxlendWhitelist is IFraxlendWhitelist {\n    // Constants\n    address public constant TIME_LOCK_ADDRESS = 0x8412ebf45bAC1B340BbE8F318b928C466c4E39CA;\n    address public constant COMPTROLLER_ADDRESS = 0x8D8Cb63BcB8AD89Aa750B9f80Aa8Fa4CfBcC8E0C;\n\n    // Oracle Whitelist Storage\n    mapping(address => bool) public oracleContractWhitelist;\n\n    // Interest Rate Calculator Whitelist Storage\n    mapping(address => bool) public rateContractWhitelist;\n\n    // Fraxlend Deployer Whitelist Storage\n    mapping(address => bool) public fraxlendDeployerWhitelist;\n\n    modifier onlyByAdmin() {\n        require(\n            msg.sender == TIME_LOCK_ADDRESS || msg.sender == COMPTROLLER_ADDRESS,\n            \"FraxlendPair: Authorized addresses only\"\n        );\n        _;\n    }\n\n    // Oracle Whitelist setter\n    function setOracleContractWhitelist(address[] calldata _addresses, bool _bool) external onlyByAdmin {\n        for (uint256 i = 0; i < _addresses.length; i++) {\n            oracleContractWhitelist[_addresses[i]] = _bool;\n        }\n    }\n\n    // Interest Rate Calculator Whitelist setter\n    function setRateContractWhitelist(address[] calldata _addresses, bool _bool) external onlyByAdmin {\n        for (uint256 i = 0; i < _addresses.length; i++) {\n            rateContractWhitelist[_addresses[i]] = _bool;\n        }\n    }\n\n    // FraxlendDeployer Whitelist setter\n    function setFraxlendDeployerWhitelist(address[] calldata _addresses, bool _bool) external onlyByAdmin {\n        for (uint256 i = 0; i < _addresses.length; i++) {\n            fraxlendDeployerWhitelist[_addresses[i]] = _bool;\n        }\n    }\n}\n"
+    },
+    "src/contracts/interfaces/IFraxlendWhitelist.sol": {
+      "content": "// SPDX-License-Identifier: ISC\npragma solidity >=0.8.15;\n\ninterface IFraxlendWhitelist {\n    function TIME_LOCK_ADDRESS() external view returns (address);\n\n    function COMPTROLLER_ADDRESS() external view returns (address);\n\n    function oracleContractWhitelist(address) external view returns (bool);\n\n    function rateContractWhitelist(address) external view returns (bool);\n\n    function fraxlendDeployerWhitelist(address) external view returns (bool);\n\n    function setOracleContractWhitelist(address[] calldata _address, bool _bool) external;\n\n    function setRateContractWhitelist(address[] calldata _address, bool _bool) external;\n\n    function setFraxlendDeployerWhitelist(address[] calldata _address, bool _bool) external;\n}\n"
+    }
+  },
+  "settings": {
+    "metadata": {
+      "bytecodeHash": "none",
+      "useLiteralContent": true
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "devdoc",
+          "userdoc",
+          "metadata",
+          "abi"
+        ]
+      }
+    },
+    "libraries": {}
+  }
+}

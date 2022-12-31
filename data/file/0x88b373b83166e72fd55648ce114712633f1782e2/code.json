@@ -1,0 +1,30 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/AccSpecifier.sol": {
+      "content": "// SPDX-License-Identifier: GPL-3.0\n\npragma solidity 0.8.12;\n\ncontract AccSpecifier {\n    function isContract(address[] calldata _addresses) \n        external \n        view \n        returns (bool[] memory) \n    { \n        uint32 size;\n        address tmpAd;\n        bool[] memory contractFlags = new bool[](_addresses.length);\n        for(uint i = 0; i < _addresses.length; i++) {\n            tmpAd = _addresses[i];\n            assembly {\n                size := extcodesize(tmpAd)\n            }\n            contractFlags[i] = (size > 0);           \n        }\n        return contractFlags;\n    }\n}"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "devdoc",
+          "userdoc",
+          "metadata",
+          "abi"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    },
+    "libraries": {}
+  }
+}
